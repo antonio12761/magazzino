@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.header-bg {
+  background-image: url("/header-bg.svg");
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  background-position: -10px;
+}
+
+@layer components {
+  button[data-ut-element="button"]:disabled {
+    @apply bg-gray-500 cursor-not-allowed; /* Stile per il bottone disabilitato */
+  }
+}

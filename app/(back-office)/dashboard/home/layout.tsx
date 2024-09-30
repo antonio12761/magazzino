@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
-
+import HomeNavbar from "@/components/dashboard/HomeNavbar"
 interface HomeLayoutProps {
   children: ReactNode;
 }
 
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return <div>
-    <h2>HomeNavBar</h2>
+    <HomeNavbar  />
     {children}</div>;
 }

@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id            Int       @id @default(autoincrement())
+  title         String
+  sku           String
+  barcode       String
+  quantity      Int
+  buyingPrice   Float
+  sellingPrice  Float
+  reOrderPoint  Int
+  weight        Float
+  dimensions    String
+  taxRate       Float
+  description   String
+  notes         String
+  categoryId    Int
+  unitId        Int
+  brandId       Int
+  supplierId    Int
+  warehouseId   Int
+
+  category      Category   @relation(fields: [categoryId], references: [id])
+  unit          Unit       @relation(fields: [unitId], references: [id])
+  brand         Brand      @relation(fields: [brandId], references: [id])
+  supplier      Supplier   @relation(fields: [supplierId], references: [id])
+  warehouse     Warehouse  @relation(fields: [warehouseId], references: [id])  // Relazione con Warehouse
+  addStockAdjustments AddStockAdjustment[] // Questo campo rappresenta gli aggiustamenti di magazzino associati
+
+}
+
+model Category {
+  id          Int     @id @default(autoincrement())
+  title       String  @unique // Impedisce duplicati nel titolo
+  description String?
+  items       Item[]
+
+  createdAt   DateTime @default(now())
+}
+
+model Unit {
+  id           Int    @id @default(autoincrement())
+  title        String @unique // Impedisce duplicati nel titolo
+  abbreviation String
+  items        Item[]
+}
+
+model Brand {
+  id    Int     @id @default(autoincrement())
+  title String  @unique // Impedisce duplicati nel titolo
+  items Item[]
+}
+
+model Warehouse {
+  id                       Int @id @default(autoincrement())
+  title                    String
+  location                 String?
+  description              String?
+  warehouseType            String?
+  addStockAdjustments      AddStockAdjustment[]
+  givingTransferAdjustments TransferStockAdjustment[] @relation("GivingWarehouseRelation")
+  recievingTransferAdjustments TransferStockAdjustment[] @relation("RecievingWarehouseRelation")
+  items Item[]
+
+  createdAt   DateTime @default(now()) // Campo per registrare la data di creazione
+
+}
+
+
+model AddStockAdjustment {
+  id              Int       @id @default(autoincrement())
+  referenceNumber String
+  addStockQty     Int
+  notes           String?
+  warehouseId     Int
+  itemId          Int
+  item            Item      @relation(fields: [itemId], references: [id])
+  warehouse       Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@index([itemId], map: "AddStockAdjustment_itemId_fkey")
+  @@index([warehouseId], map: "AddStockAdjustment_warehouseId_fkey")
+}
+
+model TransferStockAdjustment {
+  id                    Int       @id @default(autoincrement())
+  referenceNumber       String
+  transferStockQty      Int
+  notes                 String?
+  givingWarehouseId     Int
+  givingWarehouse       Warehouse @relation("GivingWarehouseRelation", fields: [givingWarehouseId], references: [id])
+  recievingWarehouseId  Int
+  recievingWarehouse    Warehouse @relation("RecievingWarehouseRelation", fields: [recievingWarehouseId], references: [id])
+  // item                  Item      @relation("ItemTransferStockAdjustment", fields: [itemId], references: [id])
+  itemId                Int
+
+  @@index([itemId], map: "TransferStockAdjustment_itemId_fkey")
+}
+
+model Supplier {
+  id            Int     @id @default(autoincrement())
+  name          String  @unique // Aggiunto indice unico se desideri che i nomi dei fornitori siano unici
+  phone         String?
+  email         String? @unique // Aggiungi un indice unico sull'email per prevenire duplicati (se necessario)
+  address       String?
+  contactPerson String?
+  supplierCode  String  @unique
+  paymentTerms  String?
+  taxID         String?
+  notes         String?
+  items         Item[]
+  
+  @@index([name]) // Aggiunta di indice per migliorare le prestazioni di ricerca
+  @@index([contactPerson]) // Indice per ricerche frequenti per contatto
+}
+
