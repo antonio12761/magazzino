@@ -1,3 +1,4 @@
+// categories/new
 "use client";
 
 import FormHeader from "@/components/FormInputs/FormHeader";
@@ -6,7 +7,6 @@ import TextareaInput from "@/components/FormInputs/TextareaInput";
 import TextInput from "@/components/FormInputs/TextInput";
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { makePostRequest } from "@/lib/apiRequest";
 import Swal from "sweetalert2";
 
 // Tipi per i dati del form
@@ -20,13 +20,13 @@ type Category = {
   id: string;
   title: string;
   description: string;
+  createdAt?: string;
 };
 
 export default function NewCategory() {
   const [loading, setLoading] = useState(false); // Stato di caricamento del form
   const [isLoading, setIsLoading] = useState(true); // Stato di caricamento per i dati della tabella
   const [lastCategory, setLastCategory] = useState<Category | null>(null); // Stato per l'ultima categoria inserita
-  const [categories, setCategories] = useState<Category[]>([]); // **Stato per le categorie**
 
   const {
     register,
@@ -40,7 +40,13 @@ export default function NewCategory() {
     try {
       const response = await fetch("/api/categories/last");
       const data = await response.json();
-      setLastCategory(data); // Aggiorna lo stato con l'ultima categoria
+      if (response.ok) {
+        setLastCategory(data); // Aggiorna lo stato con l'ultima categoria
+      } else {
+        console.error(
+          data.message || "Errore nel caricamento dell'ultima categoria"
+        );
+      }
     } catch (error) {
       console.error("Errore nel caricamento dell'ultima categoria:", error);
     } finally {
@@ -50,63 +56,43 @@ export default function NewCategory() {
 
   // Esegui la funzione per caricare l'ultima categoria al caricamento della pagina
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/categories");
-
-        // Verifica che la risposta sia OK (status 200)
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-
-        // Specifica il tipo per `data`
-        const data: Category[] = await response.json();
-
-        // Controlla se la risposta contiene un array
-        if (Array.isArray(data)) {
-          setCategories(data); // Usa setCategories per aggiornare lo stato delle categorie
-        } else {
-          throw new Error("Invalid data format");
-        }
-
-        setLoading(false);
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
-
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: `Error loading categories: ${errorMessage}`,
-        });
-
-        console.error("Error loading categories:", errorMessage);
-        setLoading(false); // Assicurati che il caricamento termini anche in caso di errore
-      }
-    };
-
-    fetchCategories();
+    fetchLastCategory();
   }, []);
 
   // Invia i dati del form al server
   const onSubmit: SubmitHandler<CategoryFormInputs> = async (data) => {
     const url = "/api/categories";
-    const resourceName = "Category";
-
     try {
-      await makePostRequest<CategoryFormInputs>({
-        setLoading,
-        endpoint: url,
-        data,
-        resourceName,
-        reset,
+      setLoading(true);
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       });
 
-      // Aggiorna l'ultima categoria inserita dopo l'invio del form
-      await fetchLastCategory(); // Chiamata per aggiornare la tabella
+      if (response.ok) {
+        Swal.fire("Success", "Category created successfully", "success");
+        reset(); // Resetta il form
+        await fetchLastCategory(); // Aggiorna l'ultima categoria inserita
+      } else {
+        const errorData = await response.json();
+        Swal.fire(
+          "Error",
+          errorData.message || "Failed to create category",
+          "error"
+        );
+      }
     } catch (error) {
+      Swal.fire(
+        "Error",
+        "Something went wrong, please try again later.",
+        "error"
+      );
+      console.error("Error creating category:", error);
+    } finally {
       setLoading(false);
-      console.error(error);
     }
   };
 
@@ -147,33 +133,35 @@ export default function NewCategory() {
         </div>
 
         {/** Tabella con l'ultima categoria inserita */}
-        {isLoading ? (
-          <p className="mt-8">Loading...</p> // Mostra il caricamento
-        ) : lastCategory ? (
-          <div className="mt-8">
-            <h3 className="text-sm font-semibold mb-4">
-              Last Category Inserted
-            </h3>
+        <div className="mt-8">
+          <h3 className="text-sm font-semibold mb-4">Last Category Inserted</h3>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : lastCategory ? (
             <table className="min-w-full bg-white border">
               <thead>
                 <tr>
                   <th className="px-4 py-2 border text-xs">Title</th>
                   <th className="px-4 py-2 border text-xs">Description</th>
+                  <th className="px-4 py-2 border text-xs">Created At</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-4 py-2 border">{lastCategory?.title}</td>
+                  <td className="px-4 py-2 border">{lastCategory.title}</td>
                   <td className="px-4 py-2 border">
-                    {lastCategory?.description}
+                    {lastCategory.description}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    {new Date(lastCategory.createdAt!).toLocaleString()}
                   </td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        ) : (
-          <p className="mt-8">No category inserted yet.</p> // Mostra il messaggio se non ci sono categorie
-        )}
+          ) : (
+            <p>No category inserted yet.</p>
+          )}
+        </div>
       </div>
     </>
   );
