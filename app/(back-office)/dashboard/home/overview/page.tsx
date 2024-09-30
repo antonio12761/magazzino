@@ -1,8 +1,8 @@
 import React from 'react'
 
 
-export default function Homepage() {
+export default function DashboardOverview() {
   return (
-    <div>Homepage</div>
+    <div>DashboardOverview</div>
   )
 }

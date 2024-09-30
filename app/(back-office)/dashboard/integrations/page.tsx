@@ -1,8 +1,8 @@
 import React from 'react'
 
 
-export default function Homepage() {
+export default function Integrations() {
   return (
-    <div>Homepage</div>
+    <div>Integrations</div>
   )
 }

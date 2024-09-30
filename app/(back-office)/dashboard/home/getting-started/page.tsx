@@ -1,8 +1,8 @@
 import React from 'react'
 
 
-export default function Homepage() {
+export default function GettingStarted() {
   return (
-    <div>Homepage</div>
+    <div>Getting Started</div>
   )
 }

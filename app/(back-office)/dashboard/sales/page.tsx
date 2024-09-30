@@ -1,8 +1,8 @@
 import React from 'react'
 
 
-export default function Homepage() {
+export default function Sales() {
   return (
-    <div>Homepage</div>
+    <div>Sales</div>
   )
 }
