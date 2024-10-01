@@ -31,17 +31,16 @@ model Item {
   unit          Unit       @relation(fields: [unitId], references: [id])
   brand         Brand      @relation(fields: [brandId], references: [id])
   supplier      Supplier   @relation(fields: [supplierId], references: [id])
-  warehouse     Warehouse  @relation(fields: [warehouseId], references: [id])  // Relazione con Warehouse
-  addStockAdjustments AddStockAdjustment[] // Questo campo rappresenta gli aggiustamenti di magazzino associati
+  warehouse     Warehouse  @relation(fields: [warehouseId], references: [id])  
+  addStockAdjustments AddStockAdjustment[] 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 }
 
 model Category {
-  id          Int     @id @default(autoincrement())
-  title       String  @unique // Impedisce duplicati nel titolo
-  description String?
-
+  id          Int      @id @default(autoincrement())
+  title       String   @unique @db.VarChar(100)
+  description String?  @db.VarChar(100)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   items       Item[]
@@ -49,9 +48,8 @@ model Category {
 
 model Unit {
   id           Int    @id @default(autoincrement())
-  title        String @unique // Impedisce duplicati nel titolo
-  abbreviation String
-
+  title        String @unique  @db.VarChar(100)
+  abbreviation String @db.VarChar(10)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   items        Item[]
@@ -59,8 +57,7 @@ model Unit {
 
 model Brand {
   id    Int     @id @default(autoincrement())
-  title String  @unique // Impedisce duplicati nel titolo
-
+  title String  @unique @db.VarChar(100)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   items       Item[]
@@ -68,9 +65,9 @@ model Brand {
 
 model Warehouse {
   id                       Int @id @default(autoincrement())
-  title                    String
-  location                 String?
-  description              String?
+  title                    String @unique @db.VarChar(100)
+  location                 String?  @db.VarChar(500)
+  description              String? @db.Text
   warehouseType            String?
   addStockAdjustments      AddStockAdjustment[]
   givingTransferAdjustments TransferStockAdjustment[] @relation("GivingWarehouseRelation")
@@ -84,9 +81,9 @@ model Warehouse {
 
 model AddStockAdjustment {
   id              Int       @id @default(autoincrement())
-  referenceNumber String
+  referenceNumber String  @db.VarChar(100)
   addStockQty     Int
-  notes           String?
+  notes           String? @db.VarChar(500)
   warehouseId     Int
   itemId          Int
   item            Item      @relation(fields: [itemId], references: [id])
@@ -101,9 +98,9 @@ model AddStockAdjustment {
 
 model TransferStockAdjustment {
   id                    Int       @id @default(autoincrement())
-  referenceNumber       String
+  referenceNumber       String  @db.VarChar(100)
   transferStockQty      Int
-  notes                 String?
+  notes                 String? @db.VarChar(500)
   givingWarehouseId     Int
   givingWarehouse       Warehouse @relation("GivingWarehouseRelation", fields: [givingWarehouseId], references: [id])
   recievingWarehouseId  Int
@@ -116,15 +113,15 @@ model TransferStockAdjustment {
 
 model Supplier {
   id            Int     @id @default(autoincrement())
-  title          String  @unique // Aggiunto indice unico se desideri che i nomi dei fornitori siano unici
-  phone         String?
-  email         String? @unique // Aggiungi un indice unico sull'email per prevenire duplicati (se necessario)
-  address       String?
-  contactPerson String?
+  title         String  @unique 
+  phone         String? @db.VarChar(100)
+  email         String? @unique
+  address       String? @db.VarChar(500)
+  contactPerson String? @db.VarChar(100)
   supplierCode  String  @unique
-  paymentTerms  String?
-  taxID         String?
-  notes         String?
+  paymentTerms  String? @db.VarChar(100)
+  taxID         String? @db.VarChar(100)
+  notes         String? @db.VarChar(500)
   items         Item[]
   
   @@index([title]) // Aggiunta di indice per migliorare le prestazioni di ricerca

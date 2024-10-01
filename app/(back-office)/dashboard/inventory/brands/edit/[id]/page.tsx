@@ -36,9 +36,7 @@ export default function EditBrand() {
           const data = await response.json();
 
           setValue("title", data.title);
-          setValue("description", data.description || "");
-          setValue("website", data.website || "");
-          setValue("logoUrl", data.logoUrl || "");
+
           setLoading(false);
         } catch (error) {
           console.error("Error loading brand:", error);

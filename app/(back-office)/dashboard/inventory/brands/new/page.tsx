@@ -15,7 +15,8 @@ type BrandFormInputs = {
 type Brand = {
   id: string;
   title: string;
-  createdAt?: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export default function NewBrand() {
@@ -72,15 +73,10 @@ export default function NewBrand() {
         await fetchLastBrand(); // Aggiorna l'ultimo brand inserito
       } else {
         const errorData = await response.json();
-        console.error(
-          errorData.message || "Failed to create brand"
-        );
+        console.error(errorData.message || "Failed to create brand");
       }
     } catch (error) {
-      console.error(
-        "Something went wrong, please try again later.",
-        error
-      );
+      console.error("Something went wrong, please try again later.", error);
     } finally {
       setLoading(false);
     }
@@ -121,18 +117,9 @@ export default function NewBrand() {
             <p>Loading...</p>
           ) : lastBrand ? (
             <table className="min-w-full bg-white border">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border text-xs">Title</th>
-                  <th className="px-4 py-2 border text-xs">Created At</th>
-                </tr>
-              </thead>
               <tbody>
                 <tr>
                   <td className="px-4 py-2 border">{lastBrand.title}</td>
-                  <td className="px-4 py-2 border">
-                    {new Date(lastBrand.createdAt!).toLocaleString()}
-                  </td>
                 </tr>
               </tbody>
             </table>

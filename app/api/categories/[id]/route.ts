@@ -40,6 +40,40 @@ export async function GET(
   }
 }
 
+// Funzione DELETE per eliminare una categoria in base all'ID
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+    const categoryId = parseInt(id, 10);
+
+    if (isNaN(categoryId)) {
+      return NextResponse.json(
+        { message: "Invalid category ID" },
+        { status: 400 }
+      );
+    }
+
+    const deletedCategory = await prisma.category.delete({
+      where: { id: categoryId },
+    });
+
+    return NextResponse.json(
+      { message: "Category deleted successfully!", deletedCategory },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Errore durante la cancellazione della categoria:", error);
+    return NextResponse.json(
+      { message: "Failed to delete category." },
+      { status: 500 }
+    );
+  }
+}
+
+// Funzione PUT per aggiornare una categoria esistente
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -50,7 +84,7 @@ export async function PUT(
 
     if (isNaN(categoryId)) {
       return NextResponse.json(
-        { message: "ID categoria non valido" },
+        { message: "Invalid category ID" },
         { status: 400 }
       );
     }
@@ -59,7 +93,7 @@ export async function PUT(
 
     if (!title || !description) {
       return NextResponse.json(
-        { message: "Titolo e descrizione sono obbligatori!" },
+        { message: "Title and description are required!" },
         { status: 400 }
       );
     }
@@ -70,13 +104,13 @@ export async function PUT(
     });
 
     return NextResponse.json(
-      { message: "Categoria aggiornata con successo!", updatedCategory },
+      { message: "Category updated successfully!", updatedCategory },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Errore durante l'aggiornamento della categoria:", error);
+    console.error("Error updating category:", error);
     return NextResponse.json(
-      { message: "Impossibile aggiornare la categoria." },
+      { message: "Failed to update category." },
       { status: 500 }
     );
   }

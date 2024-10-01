@@ -1,6 +1,6 @@
 "use client";
 
-import FormHeader from "@/components/dashboard/sidebar/FormHeader";
+import FormHeader from "@/components/FormInputs/FormHeader";
 import SubmitButton from "@/components/FormInputs/SubmitButton";
 import TextInput from "@/components/FormInputs/TextInput";
 import React, { useState } from "react";
@@ -11,6 +11,8 @@ import { makePostRequest } from "@/lib/apiRequest"; // Importa la funzione makeP
 type UnitFormInputs = {
   title: string;
   abbreviation: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export default function NewUnit() {
@@ -35,6 +37,7 @@ export default function NewUnit() {
         resourceName,
         reset,
       });
+      toast.success("Unit created successfully!");
     } catch (error) {
       toast.error("An error occurred. Please try again.");
       console.error("Error submitting form:", error);
