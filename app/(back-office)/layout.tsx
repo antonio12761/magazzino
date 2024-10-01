@@ -23,9 +23,9 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main content area con margine dinamico */}
       <main
-        className={`transition-all duration-300 ${
+        className={`flex-grow transition-all duration-300 ${
           isCollapsed ? "ml-16" : "ml-48"
-        } w-full bg-slate-100 min-h-screen`}
+        }`}
       >
         <Header />
         {children}

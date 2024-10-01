@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import db from "@/lib/db";
+import prisma from "@/lib/prisma";
 
 // Funzione POST per creare una nuova categoria
 export async function POST(request: NextRequest) {
@@ -74,18 +75,22 @@ export async function DELETE(request: NextRequest) {
 }
 
 // Funzione PUT per aggiornare una categoria esistente
-export async function PUT(request: NextRequest) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-    const { title, description } = await request.json();
+    const { id } = params;
+    const categoryId = parseInt(id, 10);
 
-    if (!id) {
+    if (isNaN(categoryId)) {
       return NextResponse.json(
-        { message: "Category ID is required!" },
+        { message: "Invalid category ID" },
         { status: 400 }
       );
     }
+
+    const { title, description } = await request.json();
 
     if (!title || !description) {
       return NextResponse.json(
@@ -94,8 +99,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const updatedCategory = await db.category.update({
-      where: { id: parseInt(id) },
+    const updatedCategory = await prisma.category.update({
+      where: { id: categoryId },
       data: { title, description },
     });
 
@@ -104,11 +109,12 @@ export async function PUT(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Errore durante l'aggiornamento della categoria:", error);
+    console.error("Error updating category:", error);
     return NextResponse.json(
       { message: "Failed to update category." },
       { status: 500 }
     );
   }
 }
+
  

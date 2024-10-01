@@ -1,4 +1,5 @@
 //  api/categories/last
+
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma"; // Assicurati che Prisma sia configurato correttamente
 
