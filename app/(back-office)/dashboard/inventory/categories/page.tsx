@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { Plus } from "lucide-react";
+import { Edit, Plus, Trash2 } from "lucide-react";
 
 type Category = {
   id: string;
@@ -120,19 +120,22 @@ export default function CategoriesList() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="py-8 px-4 lg:px-16 max-w-full overflow-x-hidden">
+    <div className="py-8 px-4 max-w-full overflow-x-hidden">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold mb-4">Categories</h1>
+        <h1 className="text-2xl font-semibold mb-8 ml-4">Categories</h1>
+
         <Link href="/dashboard/inventory/categories/new">
-          <button className="px-2 lg:px-4 py-1 lg:py-2 mb-4 flex items-center rounded-md text-white bg-emerald-700 hover:bg-emerald-600 text-xs lg:text-base">
-            <Plus className="w-4 lg:w-6 mr-1 lg:mr-2" />
+
+          <button className="px-2 lg:px-4 py-1 lg:py-2 mb-4 flex items-center rounded-md text-white bg-emerald-700 hover:bg-emerald-600 text-xs mr-4">
+            <Plus className="w-4 mr-1" />
             New Category
           </button>
+
         </Link>
       </div>
 
       <div className="mb-4">
-        <label htmlFor="sort" className="mr-2">
+        <label htmlFor="sort" className="mr-2 ml-4 text-sm">
           Sort by:
         </label>
         <select
@@ -141,7 +144,7 @@ export default function CategoriesList() {
           onChange={(e) =>
             setSortOption(e.target.value as "createdAt" | "alphabetical")
           }
-          className="w-40 border border-gray-300 rounded px-2 py-1"
+          className="w-36 border text-sm border-gray-300 rounded px-2 py-1"
         >
           <option value="alphabetical">Alphabetical</option>
           <option value="createdAt">Date Created</option>
@@ -151,17 +154,12 @@ export default function CategoriesList() {
       {categories.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="table-auto w-full bg-white border">
-            <thead>
-              <tr>
-                <th className="w-1/4 px-4 py-2 border">Title</th>
-                <th className="px-4 py-2 border">Description</th>
-                <th className="w-1/4 px-4 py-2 border">Actions</th>
-              </tr>
-            </thead>
             <tbody>
               {sortCategories(categories).map((category) => (
                 <tr key={category.id}>
-                  <td className="px-4 py-2 border">{category.title}</td>
+                  <td className="px-4 py-2 border text-center w-3/12">
+                    {category.title}
+                  </td>
 
                   {/* Dynamically truncate the description to show only `...` when narrow */}
                   <td className="px-4 py-2 border truncate text-ellipsis whitespace-nowrap overflow-hidden max-w-none lg:max-w-[400px] md:max-w-[300px] sm:max-w-[150px]">
@@ -182,14 +180,16 @@ export default function CategoriesList() {
                     <Link
                       href={`/dashboard/inventory/categories/edit/${category.id}`}
                     >
-                      <button className="mr-2 px-2 py-1 text-white bg-blue-500 rounded-md text-xs lg:text-base">
+                      <button className="mr-2 px-2 py-1 text-white bg-blue-600  hover:bg-blue-500 rounded-md text-xs flex items-center">
+                        <Edit className="mr-1 w-4" />
                         Edit
                       </button>
                     </Link>
                     <button
                       onClick={() => deleteCategory(category.id)}
-                      className="px-2 py-1 text-white bg-red-500 rounded-md text-xs lg:text-base"
+                      className="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-md text-xs flex items-center"
                     >
+                      <Trash2 className="mr-1 w-4" />
                       Delete
                     </button>
                   </td>

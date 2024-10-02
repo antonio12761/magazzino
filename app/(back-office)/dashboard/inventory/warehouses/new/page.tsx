@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import FormHeader from "@/components/dashboard/sidebar/FormHeader";
+import FormHeader from "@/components/FormInputs/FormHeader";
 import SelectInput from "@/components/FormInputs/SelectInput";
 import SubmitButton from "@/components/FormInputs/SubmitButton";
 import TextareaInput from "@/components/FormInputs/TextareaInput";
@@ -103,7 +103,7 @@ export default function NewWarehouse() {
         title="New Warehouse"
         href="/dashboard/inventory/warehouses"
       />
-      <div className="p-12">
+      <div className="px-12">
         <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -152,18 +152,10 @@ export default function NewWarehouse() {
         {/* Tabella con l'ultimo warehouse inserito */}
         {lastWarehouse ? (
           <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-4">
+            <h3 className="text-sm font-semibold mb-4">
               Last Warehouse Inserted
             </h3>
             <table className="min-w-full bg-white border">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border">Title</th>
-                  <th className="px-4 py-2 border">Location</th>
-                  <th className="px-4 py-2 border">Type</th>
-                  <th className="px-4 py-2 border">Description</th>
-                </tr>
-              </thead>
               <tbody>
                 <tr>
                   <td className="px-4 py-2 border">{lastWarehouse.title}</td>

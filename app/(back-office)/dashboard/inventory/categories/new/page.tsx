@@ -91,7 +91,7 @@ export default function NewCategory() {
       <FormHeader title="New Category" href="/dashboard/inventory/categories" />
 
       {/** Form */}
-      <div className="p-12">
+      <div className="px-12">
         <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             {/** Text Input */}

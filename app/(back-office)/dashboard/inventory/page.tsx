@@ -28,7 +28,7 @@ export default function Inventory() {
       link: "/dashboard/inventory/items",
       linkNew: "/dashboard/inventory/items/new",
       linkNewTitle: "New Item",
-      enabled: true,
+      enabled: false,
       icon: <Shirt strokeWidth={0.5} className="w-36 h-36" />,
     },
     {
@@ -61,11 +61,11 @@ export default function Inventory() {
       icon: <Scale strokeWidth={0.5} className="w-36 h-36" />,
     },
     {
-      title: "Warehouse",
+      title: "Warehouses",
       description:
         "Tweak your item prices for specific contacts or transactions",
-      link: "/dashboard/inventory/warehouse",
-      linkNew: "/dashboard/inventory/warehouse/new",
+      link: "/dashboard/inventory/warehouses",
+      linkNew: "/dashboard/inventory/warehouses/new",
       linkNewTitle: "New Warehouse",
       enabled: true,
       icon: <Warehouse strokeWidth={0.5} className="w-36 h-36" />,

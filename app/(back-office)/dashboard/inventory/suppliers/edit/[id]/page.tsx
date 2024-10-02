@@ -1,13 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation"; // Importa il router per il reindirizzamento
-import FormHeader from "@/components/FormInputs/FormHeader";
-import SubmitButton from "@/components/FormInputs/SubmitButton";
-import TextareaInput from "@/components/FormInputs/TextareaInput";
-import TextInput from "@/components/FormInputs/TextInput";
-import React, { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import toast from "react-hot-toast";
+import FormHeader from "../../../../../../../components/FormInputs/FormHeader";
+import SubmitButton from "../../../../../../../components/FormInputs/SubmitButton";
+import TextInput from "../../../../../../../components/FormInputs/TextInput";
+import TextareaInput from "../../../../../../../components/FormInputs/TextareaInput";
 
 // Tipi per i dati del form
 type SupplierFormInputs = {
@@ -22,23 +21,56 @@ type SupplierFormInputs = {
   notes: string;
 };
 
-export default function NewSupplier() {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter(); // Usa il router di Next.js per il reindirizzamento
+export default function EditSupplier() {
+  const router = useRouter();
+  const { id } = useParams(); // Ottiene l'ID dalla rotta
 
+  const [loading, setLoading] = useState(true); // Stato di caricamento
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
   } = useForm<SupplierFormInputs>();
 
-  // Funzione che gestisce la sottomissione del modulo
+  // Carica i dati del fornitore dal server
+  useEffect(() => {
+    if (id) {
+      const fetchSupplier = async () => {
+        try {
+          const response = await fetch(`/api/suppliers/${id}`);
+          if (!response.ok) {
+            throw new Error("Failed to load supplier data");
+          }
+          const data = await response.json();
+
+          // Imposta i valori del form con i dati caricati
+          setValue("title", data.title);
+          setValue("phone", data.phone);
+          setValue("email", data.email);
+          setValue("address", data.address);
+          setValue("contactPerson", data.contactPerson);
+          setValue("supplierCode", data.supplierCode);
+          setValue("paymentTerms", data.paymentTerms);
+          setValue("taxID", data.taxID);
+          setValue("notes", data.notes);
+
+          setLoading(false);
+        } catch (error) {
+          console.error("Error loading supplier:", error);
+          setLoading(false);
+        }
+      };
+
+      fetchSupplier();
+    }
+  }, [id, setValue]);
+
+  // Gestione dell'invio del form
   const onSubmit: SubmitHandler<SupplierFormInputs> = async (data) => {
-    setLoading(true);
     try {
-      const response = await fetch("/api/suppliers", {
-        method: "POST",
+      const response = await fetch(`/api/suppliers/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -46,27 +78,25 @@ export default function NewSupplier() {
       });
 
       if (response.ok) {
-        toast.success("Supplier created successfully!");
-        reset(); // Resetta il form dopo la creazione
-        router.push("/dashboard/inventory/suppliers"); // Reindirizza alla lista dei fornitori
+        router.push("/dashboard/inventory/suppliers"); // Torna alla lista dei fornitori
       } else {
         const errorData = await response.json();
-        toast.error(errorData.message || "Failed to create supplier");
+        console.error("Failed to update supplier:", errorData.message);
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+      console.error("Error updating supplier:", error);
     }
   };
 
+  if (loading) return <p>Loading...</p>;
+
   return (
     <>
-      <FormHeader title="New Supplier" href="/dashboard/inventory/suppliers" />
-      <div className="px-12">
+      <FormHeader title="Edit Supplier" href="/dashboard/inventory/suppliers" />
+      <div className="p-12">
         <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
               <TextInput<SupplierFormInputs>
                 label="Supplier Name"
                 name="title"
@@ -75,37 +105,33 @@ export default function NewSupplier() {
                 type="text"
                 errors={errors}
                 className="col-span-2"
-                disabled={loading}
               />
               <TextInput<SupplierFormInputs>
-                label="Supplier Phone"
+                label="Phone"
                 name="phone"
                 isRequired={true}
                 register={register}
                 type="text"
-                className="col-span-1"
                 errors={errors}
-                disabled={loading}
+                className="col-span-1"
               />
               <TextInput<SupplierFormInputs>
-                label="Supplier Email"
+                label="Email"
                 name="email"
                 isRequired={true}
                 register={register}
                 type="email"
-                className="col-span-1"
                 errors={errors}
-                disabled={loading}
+                className="col-span-1"
               />
               <TextInput<SupplierFormInputs>
-                label="Supplier Address"
+                label="Address"
                 name="address"
                 isRequired={true}
                 register={register}
                 type="text"
-                className="col-span-2"
                 errors={errors}
-                disabled={loading}
+                className="col-span-2"
               />
               <TextInput<SupplierFormInputs>
                 label="Contact Person"
@@ -113,9 +139,8 @@ export default function NewSupplier() {
                 isRequired={true}
                 register={register}
                 type="text"
-                className="col-span-1"
                 errors={errors}
-                disabled={loading}
+                className="col-span-1"
               />
               <TextInput<SupplierFormInputs>
                 label="Supplier Code"
@@ -123,9 +148,8 @@ export default function NewSupplier() {
                 isRequired={true}
                 register={register}
                 type="text"
-                className="col-span-1"
                 errors={errors}
-                disabled={loading}
+                className="col-span-1"
               />
               <TextInput<SupplierFormInputs>
                 label="Tax ID"
@@ -133,32 +157,28 @@ export default function NewSupplier() {
                 isRequired={true}
                 register={register}
                 type="text"
-                className="col-span-1"
                 errors={errors}
-                disabled={loading}
+                className="col-span-1"
               />
               <TextareaInput<SupplierFormInputs>
                 label="Payment Terms"
                 name="paymentTerms"
                 isRequired={true}
                 register={register}
-                className="col-span-2"
                 errors={errors}
-                disabled={loading}
+                className="col-span-2"
               />
               <TextareaInput<SupplierFormInputs>
                 label="Notes"
                 name="notes"
                 isRequired={false}
                 register={register}
-                className="col-span-2"
                 errors={errors}
-                disabled={loading}
+                className="col-span-2"
               />
             </div>
-
             <div className="flex justify-center mt-6">
-              <SubmitButton isLoading={loading} title="Create Supplier" />
+              <SubmitButton isLoading={false} title="Update Supplier" />
             </div>
           </form>
         </div>

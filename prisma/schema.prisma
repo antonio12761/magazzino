@@ -109,6 +109,9 @@ model TransferStockAdjustment {
   itemId                Int
 
   @@index([itemId], map: "TransferStockAdjustment_itemId_fkey")
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }
 
 model Supplier {
@@ -123,6 +126,9 @@ model Supplier {
   taxID         String? @db.VarChar(100)
   notes         String? @db.VarChar(500)
   items         Item[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
   
   @@index([title]) // Aggiunta di indice per migliorare le prestazioni di ricerca
   @@index([contactPerson]) // Indice per ricerche frequenti per contatto

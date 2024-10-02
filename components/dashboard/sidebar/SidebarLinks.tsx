@@ -47,7 +47,7 @@ export const sidebarLinks = [
       },
       {
         title: "Warehouse",
-        href: "/dashboard/inventory/warehouse",
+        href: "/dashboard/inventory/warehouses",
       },
       {
         title: "Adjustment",

@@ -114,7 +114,7 @@ export default function EditUnit() {
   return (
     <>
       <FormHeader title="Edit Unit" href="/dashboard/inventory/units" />
-      <div className="p-12">
+      <div className="px-12">
         <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
