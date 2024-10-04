@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { Edit, Plus, Trash2 } from "lucide-react";
+import Header from "@/components/dashboard/Header";
 
 type Category = {
   id: string;
@@ -121,19 +122,7 @@ export default function CategoriesList() {
 
   return (
     <div className="py-8 px-4 max-w-full overflow-x-hidden">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold mb-8 ml-4">Categories</h1>
-
-        <Link href="/dashboard/inventory/categories/new">
-
-          <button className="px-2 lg:px-4 py-1 lg:py-2 mb-4 flex items-center rounded-md text-white bg-emerald-700 hover:bg-emerald-600 text-xs mr-4">
-            <Plus className="w-4 mr-1" />
-            New Category
-          </button>
-
-        </Link>
-      </div>
-
+      <Header nameSection="Categories"/>
       <div className="mb-4">
         <label htmlFor="sort" className="mr-2 ml-4 text-sm">
           Sort by:
@@ -180,14 +169,14 @@ export default function CategoriesList() {
                     <Link
                       href={`/dashboard/inventory/categories/edit/${category.id}`}
                     >
-                      <button className="mr-2 px-2 py-1 text-white bg-blue-600  hover:bg-blue-500 rounded-md text-xs flex items-center">
+                      <button className="baseButton editButton">
                         <Edit className="mr-1 w-4" />
                         Edit
                       </button>
                     </Link>
                     <button
                       onClick={() => deleteCategory(category.id)}
-                      className="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-md text-xs flex items-center"
+                      className="baseButton deleteButton"
                     >
                       <Trash2 className="mr-1 w-4" />
                       Delete

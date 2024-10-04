@@ -6,6 +6,7 @@ import { Eye, Edit, Trash2, Plus } from "lucide-react"; // Import delle icone
 import toast from "react-hot-toast";
 import Popup from "../../../../../components/dashboard/Popup"; // Import del componente Popup
 import SupplierDetails from "../../../../../components/dashboard/SupplierDetails"; // Import del componente SupplierDetails
+import Header from "@/components/dashboard/Header";
 
 // Definisci il tipo per i dati del fornitore
 type Supplier = {
@@ -75,23 +76,14 @@ export default function SupplierList() {
 
   return (
     <div className="py-8 px-4 max-w-full overflow-x-hidden min-h-screen">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold mb-8 ml-4">Suppliers</h2>
-
-        <Link href="/dashboard/inventory/suppliers/new">
-          <button className="px-2 py-1 mb-4 flex items-center rounded-md text-white bg-emerald-700 hover:bg-emerald-600 text-xs mr-4">
-            <Plus className="w-3 mr-1 lg:mr-2" />
-            New Supplier
-          </button>
-        </Link>
-      </div>
+      <Header nameSection="Suppliers" />
 
       <table className="min-w-full bg-white">
         <tbody>
           {suppliers.map((supplier) => (
             <tr key={supplier.id} className="relative">
               <td className="px-4 py-2 border w-10/12">{supplier.title}</td>
-              <td className="px-4 py-2 border flex justify-end space-x-2">
+              <td className="px-4 py-2 border flex space-x-2 justify-center items-center w-auto">
                 {/* View button */}
                 <div
                   onMouseEnter={() => setHoveredSupplier(supplier)}
@@ -100,7 +92,7 @@ export default function SupplierList() {
                 >
                   <button
                     onClick={() => setSelectedSupplier(supplier)} // Mostra scheda al clic
-                    className="px-2 py-1 text-xs text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center"
+                    className="baseButton viewButton"
                   >
                     <Eye className="mr-1 w-4" /> View
                   </button>
@@ -124,7 +116,7 @@ export default function SupplierList() {
                 {/* Edit button */}
                 <Link
                   href={`/dashboard/inventory/suppliers/edit/${supplier.id}`}
-                  className="px-2 py-1 text-xs text-white bg-blue-600 rounded hover:bg-blue-500 flex items-center"
+                  className="baseButton editButton"
                 >
                   <Edit className="mr-1 w-4" /> Edit
                 </Link>
@@ -132,7 +124,7 @@ export default function SupplierList() {
                 {/* Delete button */}
                 <button
                   onClick={() => handleDelete(supplier.id)}
-                  className="px-2 py-1 text-xs text-white bg-red-600 rounded hover:bg-red-500 flex items-center"
+                  className="baseButton deleteButton"
                 >
                   <Trash2 className="mr-1 w-4" /> Delete
                 </button>

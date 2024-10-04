@@ -19,8 +19,8 @@ model Item {
   weight        Float
   dimensions    String
   taxRate       Float
-  description   String
-  notes         String
+  description   String? @db.VarChar(255)
+  notes         String?
   categoryId    Int
   unitId        Int
   brandId       Int

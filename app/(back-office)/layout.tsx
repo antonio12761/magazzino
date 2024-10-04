@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@/components/dashboard/Header";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import Sidebar from "@/components/dashboard/sidebar/Sidebar";
 import React, { ReactNode, useState } from "react";
 
@@ -27,7 +27,7 @@ export default function Layout({ children }: LayoutProps) {
           isCollapsed ? "ml-16" : "ml-48"
         }`}
       >
-        <Header />
+        <DashboardHeader />
         {children}
       </main>
     </div>

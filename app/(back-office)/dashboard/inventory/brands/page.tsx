@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Eye, Edit, Trash2, Plus } from "lucide-react"; // Import delle icone
 import toast from "react-hot-toast";
+import Header from "@/components/dashboard/Header";
 
 // Definisci il tipo per i dati del brand
 type Brand = {
@@ -56,27 +57,17 @@ export default function BrandsList() {
 
   return (
     <div className="py-8 px-4 max-w-full overflow-x-hidden">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold mb-8 ml-4">Brands</h2>
-
-        <Link href="/dashboard/inventory/brands/new">
-          <button className="px-2 lg:px-4 py-1 lg:py-2 mb-4 flex items-center rounded-md text-white bg-emerald-700 hover:bg-emerald-600 text-xs mr-4">
-            <Plus className="w-4 lg:w-6 mr-1 lg:mr-2" />
-            New Brand
-          </button>
-        </Link>
-      </div>
-
+      <Header nameSection="Brands" />
       <table className="min-w-full bg-white">
         <tbody>
           {brands.map((brand) => (
             <tr key={brand.id}>
               <td className="px-4 py-2 border w-10/12">{brand.title}</td>
-              
+
               <td className="px-4 py-2 border flex justify-end space-x-2 ">
                 <Link
                   href={`/dashboard/inventory/brands/edit/${brand.id}`}
-                  className="px-2 py-1 text-xs text-white bg-blue-600 rounded hover:bg-blue-500 flex items-center"
+                  className="baseButton editButton"
                 >
                   <Edit className="mr-1 w-4" />{" "}
                   {/* Icona Edit accanto al testo */}
@@ -84,7 +75,7 @@ export default function BrandsList() {
                 </Link>
                 <button
                   onClick={() => handleDelete(brand.id)}
-                  className="px-2 py-1 text-xs text-white bg-red-600 rounded hover:bg-red-500 flex items-center"
+                  className="baseButton deleteButton"
                 >
                   <Trash2 className="mr-1 w-4" />{" "}
                   {/* Icona Trash accanto al testo */}

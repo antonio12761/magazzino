@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Eye, Edit, Trash2, Plus } from "lucide-react";
+import Header from "@/components/dashboard/Header";
 
 // Definisci il tipo per i dati del magazzino
 type Warehouse = {
@@ -59,26 +60,20 @@ export default function WarehousesList() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between mb-4">
-        <h2 className="text-2xl font-semibold ml-4">Warehouses</h2>
-        <Link
-          href="/dashboard/inventory/warehouses/new"
-          className="px-2 py-1 rounded-md text-sm text-white bg-emerald-700 hover:bg-emerald-600 flex items-center mr-4"
-        >
-          <Plus className="mr-1 w-4" />
-          New Warehouse
-        </Link>
-      </div>
-
+    <div className="py-8 px-4 max-w-full overflow-x-hidden min-h-screen">
+      <Header nameSection="Warehouses" />
       <table className="min-w-full bg-white">
         <tbody>
           {warehouses.map((warehouse) => (
             <tr key={warehouse.id} className="relative">
               <td className="px-4 py-2 border">{warehouse.title}</td>
-              <td className="px-4 py-2 border">{warehouse.location}</td>
-              <td className="px-4 py-2 border">{warehouse.warehouseType}</td>
-              <td className="px-4 py-2 border flex space-x-2">
+              <td className="px-4 py-2 border hidden sm:table-cell">
+                {warehouse.location}
+              </td>
+              <td className="px-4 py-2 border hidden md:table-cell">
+                {warehouse.warehouseType}
+              </td>
+              <td className="px-4 py-2 border flex space-x-2 justify-center items-center w-auto">
                 {/* Pop-up al passaggio del mouse sul pulsante View */}
                 <div
                   onMouseEnter={() => setHoveredWarehouse(warehouse)}
@@ -87,7 +82,7 @@ export default function WarehousesList() {
                 >
                   <Link
                     href={`/dashboard/inventory/warehouses/${warehouse.id}`}
-                    className="px-2 py-1 text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center text-xs"
+                    className="baseButton viewButton"
                   >
                     <Eye className="mr-1 w-4" />{" "}
                     {/* Icona Eye accanto al testo */}
@@ -113,7 +108,7 @@ export default function WarehousesList() {
                 {/* Pulsante di modifica */}
                 <Link
                   href={`/dashboard/inventory/warehouses/edit/${warehouse.id}`}
-                  className="px-2 py-1 text-white bg-blue-600 rounded hover:bg-blue-500 flex items-center text-xs"
+                  className="baseButton editButton"
                 >
                   <Edit className="mr-1 w-4" />{" "}
                   {/* Icona Edit accanto al testo */}
@@ -123,7 +118,7 @@ export default function WarehousesList() {
                 {/* Pulsante di eliminazione */}
                 <button
                   onClick={() => handleDelete(warehouse.id)}
-                  className="px-2 py-1 text-white bg-red-600 rounded hover:bg-red-500 flex items-center  text-xs"
+                  className="baseButton deleteButton"
                 >
                   <Trash2 className="mr-1 w-4" />{" "}
                   {/* Icona Trash accanto al testo */}

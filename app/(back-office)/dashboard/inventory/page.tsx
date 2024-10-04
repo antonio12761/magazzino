@@ -28,7 +28,7 @@ export default function Inventory() {
       link: "/dashboard/inventory/items",
       linkNew: "/dashboard/inventory/items/new",
       linkNewTitle: "New Item",
-      enabled: false,
+      enabled: true,
       icon: <Shirt strokeWidth={0.5} className="w-36 h-36" />,
     },
     {
