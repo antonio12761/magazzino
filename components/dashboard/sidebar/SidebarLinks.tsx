@@ -17,6 +17,11 @@ export const sidebarLinks = [
     icon: (props: SVGProps<SVGSVGElement>) => <Home {...props} />, // Qui usiamo JSX.Element
   },
   {
+    title: "Incassi",
+    href: "/dashboard/incassi",
+    icon: (props: SVGProps<SVGSVGElement>) => <Home {...props} />,
+  },
+  {
     title: "Inventory",
     icon: (props: SVGProps<SVGSVGElement>) => <BaggageClaim {...props} />,
     href: "/dashboard/inventory", // Qui usiamo JSX.Element
@@ -100,5 +105,10 @@ export const sidebarLinks = [
     title: "Documents",
     href: "/dashboard/documents",
     icon: (props: SVGProps<SVGSVGElement>) => <FolderClosed {...props} />, // Qui usiamo JSX.Element
+  },
+  {
+    title: "Upload da cvs",
+    href: "/dashboard/uploads",
+    icon: (props: SVGProps<SVGSVGElement>) => <FolderClosed {...props} />,
   },
 ];

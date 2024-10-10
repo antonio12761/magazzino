@@ -8,33 +8,38 @@ datasource db {
 }
 
 model Item {
-  id            Int       @id @default(autoincrement())
-  title         String
-  sku           String
-  barcode       String
-  quantity      Int
-  buyingPrice   Float
-  sellingPrice  Float
-  reOrderPoint  Int
-  weight        Float
-  dimensions    String
-  taxRate       Float
-  description   String? @db.VarChar(255)
-  notes         String?
-  categoryId    Int
-  unitId        Int
-  brandId       Int
-  supplierId    Int
-  warehouseId   Int
+  id                  Int                  @id @default(autoincrement())
+  title               String
+  sku                 String
+  barcode             String
+  quantity            Int
+  buyingPrice         Float
+  sellingPrice        Float
+  reOrderPoint        Int
+  weight              Float
+  dimensions          String
+  taxRate             Float
+  description         String?              @db.VarChar(255)
+  notes               String?
+  categoryId          Int
+  unitId              Int
+  brandId             Int
+  supplierId          Int
+  warehouseId         Int
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now())
+  addStockAdjustments AddStockAdjustment[]
+  brand               Brand                @relation(fields: [brandId], references: [id])
+  category            Category             @relation(fields: [categoryId], references: [id])
+  supplier            Supplier             @relation(fields: [supplierId], references: [id])
+  unit                Unit                 @relation(fields: [unitId], references: [id])
+  warehouse           Warehouse            @relation(fields: [warehouseId], references: [id])
 
-  category      Category   @relation(fields: [categoryId], references: [id])
-  unit          Unit       @relation(fields: [unitId], references: [id])
-  brand         Brand      @relation(fields: [brandId], references: [id])
-  supplier      Supplier   @relation(fields: [supplierId], references: [id])
-  warehouse     Warehouse  @relation(fields: [warehouseId], references: [id])  
-  addStockAdjustments AddStockAdjustment[] 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  @@index([brandId], map: "Item_brandId_fkey")
+  @@index([categoryId], map: "Item_categoryId_fkey")
+  @@index([supplierId], map: "Item_supplierId_fkey")
+  @@index([unitId], map: "Item_unitId_fkey")
+  @@index([warehouseId], map: "Item_warehouseId_fkey")
 }
 
 model Category {
@@ -47,90 +52,108 @@ model Category {
 }
 
 model Unit {
-  id           Int    @id @default(autoincrement())
-  title        String @unique  @db.VarChar(100)
-  abbreviation String @db.VarChar(10)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  title        String   @unique @db.VarChar(100)
+  abbreviation String   @db.VarChar(10)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
   items        Item[]
 }
 
 model Brand {
-  id    Int     @id @default(autoincrement())
-  title String  @unique @db.VarChar(100)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  items       Item[]
+  id        Int      @id @default(autoincrement())
+  title     String   @unique @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  items     Item[]
 }
 
 model Warehouse {
-  id                       Int @id @default(autoincrement())
-  title                    String @unique @db.VarChar(100)
-  location                 String?  @db.VarChar(500)
-  description              String? @db.Text
-  warehouseType            String?
-  addStockAdjustments      AddStockAdjustment[]
-  givingTransferAdjustments TransferStockAdjustment[] @relation("GivingWarehouseRelation")
+  id                           Int                       @id @default(autoincrement())
+  title                        String                    @unique @db.VarChar(100)
+  location                     String?                   @db.VarChar(500)
+  description                  String?                   @db.Text
+  warehouseType                String?
+  createdAt                    DateTime                  @default(now())
+  updatedAt                    DateTime                  @default(now())
+  addStockAdjustments          AddStockAdjustment[]
+  items                        Item[]
+  givingTransferAdjustments    TransferStockAdjustment[] @relation("GivingWarehouseRelation")
   recievingTransferAdjustments TransferStockAdjustment[] @relation("RecievingWarehouseRelation")
-  items Item[]
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
 }
-
 
 model AddStockAdjustment {
   id              Int       @id @default(autoincrement())
-  referenceNumber String  @db.VarChar(100)
+  referenceNumber String    @db.VarChar(100)
   addStockQty     Int
-  notes           String? @db.VarChar(500)
+  notes           String?   @db.VarChar(500)
   warehouseId     Int
   itemId          Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now())
   item            Item      @relation(fields: [itemId], references: [id])
   warehouse       Warehouse @relation(fields: [warehouseId], references: [id])
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
 
   @@index([itemId], map: "AddStockAdjustment_itemId_fkey")
   @@index([warehouseId], map: "AddStockAdjustment_warehouseId_fkey")
 }
 
 model TransferStockAdjustment {
-  id                    Int       @id @default(autoincrement())
-  referenceNumber       String  @db.VarChar(100)
-  transferStockQty      Int
-  notes                 String? @db.VarChar(500)
-  givingWarehouseId     Int
-  givingWarehouse       Warehouse @relation("GivingWarehouseRelation", fields: [givingWarehouseId], references: [id])
-  recievingWarehouseId  Int
-  recievingWarehouse    Warehouse @relation("RecievingWarehouseRelation", fields: [recievingWarehouseId], references: [id])
- 
-  itemId                Int
+  id                   Int       @id @default(autoincrement())
+  referenceNumber      String    @db.VarChar(100)
+  transferStockQty     Int
+  notes                String?   @db.VarChar(500)
+  givingWarehouseId    Int
+  recievingWarehouseId Int
+  itemId               Int
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now())
+  givingWarehouse      Warehouse @relation("GivingWarehouseRelation", fields: [givingWarehouseId], references: [id])
+  recievingWarehouse   Warehouse @relation("RecievingWarehouseRelation", fields: [recievingWarehouseId], references: [id])
 
   @@index([itemId], map: "TransferStockAdjustment_itemId_fkey")
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  @@index([givingWarehouseId], map: "TransferStockAdjustment_givingWarehouseId_fkey")
+  @@index([recievingWarehouseId], map: "TransferStockAdjustment_recievingWarehouseId_fkey")
 }
 
 model Supplier {
-  id            Int     @id @default(autoincrement())
-  title         String  @unique 
-  phone         String? @db.VarChar(100)
-  email         String? @unique
-  address       String? @db.VarChar(500)
-  contactPerson String? @db.VarChar(100)
-  supplierCode  String  @unique
-  paymentTerms  String? @db.VarChar(100)
-  taxID         String? @db.VarChar(100)
-  notes         String? @db.VarChar(500)
+  id            Int      @id @default(autoincrement())
+  title         String   @unique
+  phone         String?  @db.VarChar(100)
+  email         String?  @unique
+  address       String?  @db.VarChar(500)
+  contactPerson String?  @db.VarChar(100)
+  supplierCode  String   @unique
+  paymentTerms  String?  @db.VarChar(100)
+  taxID         String?  @db.VarChar(100)
+  notes         String?  @db.VarChar(500)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
   items         Item[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  
-  @@index([title]) // Aggiunta di indice per migliorare le prestazioni di ricerca
-  @@index([contactPerson]) // Indice per ricerche frequenti per contatto
+  @@index([title])
+  @@index([contactPerson])
 }
 
+model totali_mensili {
+  id                 Int      @id @default(autoincrement())
+  anno               Int
+  mese               Int
+  totale_incasso     Decimal? @default(0.00) @db.Decimal(10, 2)
+  totale_elettronico Decimal? @default(0.00) @db.Decimal(10, 2)
+  totale_contanti    Decimal? @default(0.00) @db.Decimal(10, 2)
+  createdAt          DateTime @default(now()) @db.Timestamp(0)
+  updatedAt          DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  @@unique([anno, mese], map: "anno")
+}
+
+model incasso {
+  id          Int      @id @default(autoincrement())
+  giorno      DateTime
+  incasso     Decimal  @db.Decimal(19, 4)
+  elettronico Decimal  @db.Decimal(19, 4)
+  contanti    Decimal  @db.Decimal(19, 4)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+}

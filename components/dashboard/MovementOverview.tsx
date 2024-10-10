@@ -11,26 +11,43 @@ export default function MovementOverview() {
   const [isOrdineOpen, setIsOrdineOpen] = useState(false);
 
   return (
-    <div>
-      <h1 className="text-xl font-semibold mb-4">Movement Overview</h1>
-      <div className="flex space-x-4">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-semibold mb-8 text-center">
+        Movement Overview
+      </h1>
+
+      <div className="flex space-x-4 w-full max-w-4xl">
+        {/* Pulsante Nuovo Incasso */}
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          className="flex-1 px-6 py-4 text-blue-600 hover:text-white hover:bg-blue-600 ring-1 ring-blue-600  rounded-lg shadow-lg"
           onClick={() => setIsIncassoOpen(true)}
         >
-          Nuovo Incasso
+          <span className="block text-lg font-semibold">Nuovo Incasso</span>
+          <span className="block text-sm font-light mt-1">
+            Rilevato dalla chiusura del giorno
+          </span>
         </button>
+
+        {/* Pulsante Nuova Spesa */}
         <button
-          className="px-4 py-2 bg-green-600 text-white rounded"
+          className="flex-1 px-6 py-4 text-red-600 ring-1 ring-red-600 hover:bg-red-600 hover:text-white rounded-lg shadow-lg"
           onClick={() => setIsSpesaOpen(true)}
         >
-          Nuova Spesa
+          <span className="block text-lg font-semibold">Nuova Spesa</span>
+          <span className="block text-sm font-light mt-1">
+            Tutte le spese, sia fatture che altro
+          </span>
         </button>
+
+        {/* Pulsante Nuovo Ordine */}
         <button
-          className="px-4 py-2 bg-purple-600 text-white rounded"
+          className="flex-1 px-6 py-4  text-emerald-600 ring-1 ring-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg shadow-lg"
           onClick={() => setIsOrdineOpen(true)}
         >
-          Nuovo Ordine
+          <span className="block text-lg font-semibold">Nuovo Ordine</span>
+          <span className="block text-sm font-light mt-1">
+            Ordini dei prodotti ai fornitori
+          </span>
         </button>
       </div>
 

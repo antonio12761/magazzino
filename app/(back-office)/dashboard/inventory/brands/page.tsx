@@ -60,30 +60,38 @@ export default function BrandsList() {
       <Header nameSection="Brands" />
       <table className="min-w-full bg-white">
         <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.id}>
-              <td className="px-4 py-2 border w-10/12">{brand.title}</td>
+          {brands && brands.length > 0 ? (
+            brands.map((brand) => (
+              <tr key={brand.id}>
+                <td className="px-4 py-2 border w-10/12">{brand.title}</td>
 
-              <td className="px-4 py-2 border flex justify-end space-x-2 ">
-                <Link
-                  href={`/dashboard/inventory/brands/edit/${brand.id}`}
-                  className="baseButton editButton"
-                >
-                  <Edit className="mr-1 w-4" />{" "}
-                  {/* Icona Edit accanto al testo */}
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDelete(brand.id)}
-                  className="baseButton deleteButton"
-                >
-                  <Trash2 className="mr-1 w-4" />{" "}
-                  {/* Icona Trash accanto al testo */}
-                  Delete
-                </button>
+                <td className="px-4 py-2 border flex justify-end space-x-2 ">
+                  <Link
+                    href={`/dashboard/inventory/brands/edit/${brand.id}`}
+                    className="baseButton editButton"
+                  >
+                    <Edit className="mr-1 w-4" />{" "}
+                    {/* Icona Edit accanto al testo */}
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(brand.id)}
+                    className="baseButton deleteButton"
+                  >
+                    <Trash2 className="mr-1 w-4" />{" "}
+                    {/* Icona Trash accanto al testo */}
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td className="px-4 py-2 border w-10/12" colSpan={2}>
+                Nessun brand trovato
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
